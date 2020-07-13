@@ -8,4 +8,3 @@ C:\data\Projects\FinalProject\DAL\bin\Debug\EntityFramework.SqlServer.xml
 C:\data\Projects\FinalProject\DAL\obj\Debug\DAL.csproj.CopyComplete
 C:\data\Projects\FinalProject\DAL\obj\Debug\DAL.dll
 C:\data\Projects\FinalProject\DAL\obj\Debug\DAL.pdb
-C:\data\Projects\FinalProject\DAL\obj\Debug\DAL.csprojAssemblyReference.cache

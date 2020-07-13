@@ -10,7 +10,7 @@ namespace DAL.Context
 {
 	public class PostContext : DbContext
 	{
-		public PostContext(string connectionString) : base("DbConnection")
+		public PostContext(string connectionString) : base(connectionString)
 		{
 		}
 		public DbSet<Post> Posts { get; set; }
