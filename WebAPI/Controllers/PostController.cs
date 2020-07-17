@@ -25,45 +25,50 @@ namespace WebAPI.Controllers
     {
 		MapperConfiguration WEBtoBLL = new MapperConfiguration(cfg => cfg.CreateMap<PostWEB, PostBLL>());
 		MapperConfiguration BLLtoWEB = new MapperConfiguration(cfg => cfg.CreateMap<PostBLL, PostWEB>());
+		//MapperConfiguration IEBLLtoWEB = new MapperConfiguration(cfg => cfg.CreateMap<IEnumerable<PostBLL>, IEnumerable<PostWEB>>());
 		IPostService service;
-		/*public PostController()
-		{
-
-		}*/
-
-		public HttpResponseMessage Options()
-		{
-			var response = new HttpResponseMessage();
-			response.StatusCode = HttpStatusCode.OK;
-			return response;
-		}
-
-
 
 		// GET api/post
-		public IEnumerable<string> Get() //IEnumerable<string>
+		//public IEnumerable<string> Get() //IEnumerable<string>
+		//{
+		//	string connstr = ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
+		//	IKernel Kernal = new StandardKernel();
+		//	Kernal.Bind<IPostService>().To<PostService>();
+		//	service = Kernal.Get<IPostService>(new ConstructorArgument("connectionString", connstr));
+
+		//	IEnumerable<PostBLL> listofposts = service.GetAll();
+		//	string respond = "";
+		//	var mapper = new Mapper(BLLtoWEB);
+		//	List<string> strlist = new List<string>();
+		//	foreach (PostBLL i in listofposts)
+		//	{
+		//		PostWEB postWEB = mapper.Map<PostBLL, PostWEB>(i);
+		//		respond = postWEB.Id.ToString() + " - " + postWEB.Content + " ";
+		//		strlist.Add(respond);
+		//	}
+		//	string[] strres;
+		//	strres = (from i in strlist select i).ToArray();
+		//	return strres;
+		//}
+		public HttpResponseMessage Get()
 		{
 			string connstr = ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
 			IKernel Kernal = new StandardKernel();
 			Kernal.Bind<IPostService>().To<PostService>();
 			service = Kernal.Get<IPostService>(new ConstructorArgument("connectionString", connstr));
 
-			IEnumerable<PostBLL> listofposts = service.GetAll();
-			string respond = "";
+			IEnumerable<PostBLL> listOfPosts = service.GetAll();
 			var mapper = new Mapper(BLLtoWEB);
-			//string[] strres = new string[1];
-			List<string> strlist = new List<string>();
-			foreach (PostBLL i in listofposts)
-			{
-				PostWEB postWEB = mapper.Map<PostBLL, PostWEB>(i);
-				respond = postWEB.Id.ToString() + " - " + postWEB.Content + " ";
-				strlist.Add(respond);
-				//strres[1] = postWEB.Content;
-			}
-			string[] strres; //= new string[] { x => foreach i in strlist x = i };
-			strres = (from i in strlist select i).ToArray();
-			//string respond = postWEB.Content;
-			return strres;
+
+			List<PostWEB> listOfPostsWEB = mapper.Map<IEnumerable<PostBLL>, List<PostWEB>>(listOfPosts);
+
+			string responseBody = JsonSerializer.Serialize(listOfPostsWEB);
+
+			HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
+			response.Content = new StringContent(responseBody);
+			//response.Headers.Add("Access-Control-Allow-Origin", "*");
+
+			return response;
 		}
 
 		// GET api/post/5
@@ -89,7 +94,7 @@ namespace WebAPI.Controllers
 			IKernel Kernal = new StandardKernel();
 			Kernal.Bind<IPostService>().To<PostService>();
 			service = Kernal.Get<IPostService>(new ConstructorArgument("connectionString", connstr));
-			string res = "";
+			string res;
 			if (value == null)
 				throw new Exception();
 			else

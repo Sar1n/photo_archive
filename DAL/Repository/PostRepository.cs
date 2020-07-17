@@ -24,6 +24,10 @@ namespace DAL.Repository
 		{
 			return db.Posts.Find(id);
 		}
+		public IEnumerable<Post> GetSome(string searchstring) //get
+		{
+			return db.Posts.Where(p => p.Title.ToLower().Contains(searchstring.ToLower()));
+		}
 		public void Create(Post item) //post
 		{
 			db.Posts.Add(item);

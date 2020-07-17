@@ -36,6 +36,11 @@ namespace BLL.Services
 			var mapper = new Mapper(DALtoBLL);
 			return mapper.Map<Post, PostBLL>(post);
 		}
+		public IEnumerable<PostBLL> GetSome(string searchstring) //get
+		{
+			var mapper = new Mapper(DALtoBLL);
+			return mapper.Map<IEnumerable<Post>, List<PostBLL>>(db.Post.GetSome(searchstring));
+		}
 		public void Create(PostBLL post) //post
 		{
 			if (post == null)

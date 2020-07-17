@@ -11,6 +11,7 @@ namespace BLL.Services
 	{
 		IEnumerable<PostBLL> GetAll (); //get
 		PostBLL GetOne (int id); //get
+		IEnumerable<PostBLL> GetSome(string searchstring); //get
 		void Create (PostBLL Post); //post
 		void Update (PostBLL Post); //put
 		void Delete (int id); //delete
