@@ -25,31 +25,8 @@ namespace WebAPI.Controllers
     {
 		MapperConfiguration WEBtoBLL = new MapperConfiguration(cfg => cfg.CreateMap<PostWEB, PostBLL>());
 		MapperConfiguration BLLtoWEB = new MapperConfiguration(cfg => cfg.CreateMap<PostBLL, PostWEB>());
-		//MapperConfiguration IEBLLtoWEB = new MapperConfiguration(cfg => cfg.CreateMap<IEnumerable<PostBLL>, IEnumerable<PostWEB>>());
 		IPostService service;
-
-		// GET api/post
-		//public IEnumerable<string> Get() //IEnumerable<string>
-		//{
-		//	string connstr = ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
-		//	IKernel Kernal = new StandardKernel();
-		//	Kernal.Bind<IPostService>().To<PostService>();
-		//	service = Kernal.Get<IPostService>(new ConstructorArgument("connectionString", connstr));
-
-		//	IEnumerable<PostBLL> listofposts = service.GetAll();
-		//	string respond = "";
-		//	var mapper = new Mapper(BLLtoWEB);
-		//	List<string> strlist = new List<string>();
-		//	foreach (PostBLL i in listofposts)
-		//	{
-		//		PostWEB postWEB = mapper.Map<PostBLL, PostWEB>(i);
-		//		respond = postWEB.Id.ToString() + " - " + postWEB.Content + " ";
-		//		strlist.Add(respond);
-		//	}
-		//	string[] strres;
-		//	strres = (from i in strlist select i).ToArray();
-		//	return strres;
-		//}
+		
 		public HttpResponseMessage Get()
 		{
 			string connstr = ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
@@ -66,30 +43,54 @@ namespace WebAPI.Controllers
 
 			HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
 			response.Content = new StringContent(responseBody);
-			//response.Headers.Add("Access-Control-Allow-Origin", "*");
 
 			return response;
 		}
 
 		// GET api/post/5
-		public string Get(int id)
+		public HttpResponseMessage Get(string searchstring)
 		{
 			string connstr = ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
 			IKernel Kernal = new StandardKernel();
 			Kernal.Bind<IPostService>().To<PostService>();
 			service = Kernal.Get<IPostService>(new ConstructorArgument("connectionString", connstr));
-			
-			PostBLL find = service.GetOne(id);
+
+			IEnumerable<PostBLL> listOfPosts = service.GetSome(searchstring);
 			var mapper = new Mapper(BLLtoWEB);
-			PostWEB postWEB = mapper.Map<PostBLL, PostWEB>(find);
-			string respond = postWEB.Content;
-			return respond;
+
+			List<PostWEB> listOfPostsWEB = mapper.Map<IEnumerable<PostBLL>, List<PostWEB>>(listOfPosts);
+
+			string responseBody = JsonSerializer.Serialize(listOfPostsWEB);
+
+			HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
+			response.Content = new StringContent(responseBody);
+
+			return response;
+		}
+		// GET api/post/5
+		public HttpResponseMessage Get(int id)
+		{
+			string connstr = ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
+			IKernel Kernal = new StandardKernel();
+			Kernal.Bind<IPostService>().To<PostService>();
+			service = Kernal.Get<IPostService>(new ConstructorArgument("connectionString", connstr));
+
+			PostBLL Post = service.GetOne(id);
+			var mapper = new Mapper(BLLtoWEB);
+
+			PostWEB PostWEB = mapper.Map<PostBLL, PostWEB>(Post);
+
+			string responseBody = JsonSerializer.Serialize(PostWEB);
+
+			HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
+			response.Content = new StringContent(responseBody);
+
+			return response;
 		}
 
 		// POST api/post
 		public HttpResponseMessage Post(HttpRequestMessage value)
 		{
-			//throw new Exception("BENIS");
 			string connstr = ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
 			IKernel Kernal = new StandardKernel();
 			Kernal.Bind<IPostService>().To<PostService>();
