@@ -8,3 +8,14 @@ C:\data\Projects\FinalProject\DAL\bin\Debug\EntityFramework.SqlServer.xml
 C:\data\Projects\FinalProject\DAL\obj\Debug\DAL.csproj.CopyComplete
 C:\data\Projects\FinalProject\DAL\obj\Debug\DAL.dll
 C:\data\Projects\FinalProject\DAL\obj\Debug\DAL.pdb
+C:\data\Projects\Finalv2\photo_archive\DAL\bin\Debug\DAL.dll.config
+C:\data\Projects\Finalv2\photo_archive\DAL\bin\Debug\DAL.dll
+C:\data\Projects\Finalv2\photo_archive\DAL\bin\Debug\DAL.pdb
+C:\data\Projects\Finalv2\photo_archive\DAL\bin\Debug\EntityFramework.dll
+C:\data\Projects\Finalv2\photo_archive\DAL\bin\Debug\EntityFramework.SqlServer.dll
+C:\data\Projects\Finalv2\photo_archive\DAL\bin\Debug\EntityFramework.xml
+C:\data\Projects\Finalv2\photo_archive\DAL\bin\Debug\EntityFramework.SqlServer.xml
+C:\data\Projects\Finalv2\photo_archive\DAL\obj\Debug\DAL.csprojAssemblyReference.cache
+C:\data\Projects\Finalv2\photo_archive\DAL\obj\Debug\DAL.csproj.CopyComplete
+C:\data\Projects\Finalv2\photo_archive\DAL\obj\Debug\DAL.dll
+C:\data\Projects\Finalv2\photo_archive\DAL\obj\Debug\DAL.pdb

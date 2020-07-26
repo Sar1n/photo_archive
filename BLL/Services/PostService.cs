@@ -1,7 +1,6 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using BLL.DataTransferObjects;
 using DAL.Models;
@@ -9,6 +8,10 @@ using DAL.UnitOfWork;
 using Ninject;
 using Ninject.Parameters;
 using AutoMapper;
+using Imgur.API.Authentication.Impl;
+using Imgur.API.Endpoints.Impl;
+using Imgur.API.Models;
+
 
 namespace BLL.Services
 {
@@ -17,7 +20,7 @@ namespace BLL.Services
 		IUnitOfWork db { get; set; }
 		MapperConfiguration DALtoBLL = new MapperConfiguration(cfg => cfg.CreateMap<Post, PostBLL>());
 		MapperConfiguration BLLtoDAL = new MapperConfiguration(cfg => cfg.CreateMap<PostBLL, Post>());
-		public PostService(string connectionString)//, IKernel Kernal
+		public PostService(string connectionString)
 		{
 			IKernel Kernal = new StandardKernel();
 			Kernal.Bind<IUnitOfWork>().To<UnitOfWork>();
@@ -41,10 +44,31 @@ namespace BLL.Services
 			var mapper = new Mapper(DALtoBLL);
 			return mapper.Map<IEnumerable<Post>, List<PostBLL>>(db.Post.GetSome(searchstring));
 		}
-		public void Create(PostBLL post) //post
+		public async Task Create(PostBLL post) //post
 		{
 			if (post == null)
-				throw new Exception("Post to post is null");
+				throw new Exception("Post is null");
+			string path;
+			var rand = new Random();
+			do
+			{
+				path = @"C:\data\Projects\Finalv2\photo_archive\WebAPI\App_Data\" + rand.Next(1000).ToString() + ".jpg";
+			}
+			while (File.Exists(path));
+			string base64 = post.Content.Substring(post.Content.LastIndexOf(',') + 1);
+			
+			File.WriteAllBytes(path, Convert.FromBase64String(base64));
+			
+			var client = new ImgurClient("", "");
+			var endpoint = new ImageEndpoint(client);
+			IImage image;
+			using (var fs = new FileStream(path, FileMode.Open))
+			{
+				image = await endpoint.UploadImageStreamAsync(fs);
+			}
+			
+			post.Url = image.Link;
+			//File.Delete(path);
 			var mapper = new Mapper(BLLtoDAL);
 			Post postDAL = mapper.Map<PostBLL, Post>(post);
 			db.Post.Create(postDAL);
